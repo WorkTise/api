@@ -1,0 +1,29 @@
+{
+  "name": "worktise_api",
+  "version": "1.0.0",
+  "description": "WorkTise API for user and app management",
+  "keywords": [
+    "worktise",
+    "api"
+  ],
+  "homepage": "https://github.com/WorkTise/api#readme",
+  "bugs": {
+    "url": "https://github.com/WorkTise/api/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WorkTise/api.git"
+  },
+  "author": "Mohd Shafiq Malik",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0"
+  }
+}

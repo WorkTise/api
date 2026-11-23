@@ -1,3 +1,4 @@
+require("dotenv").config();
 
 const express = require("express");
 const { connectDB } = require("./src/db/database");
@@ -35,6 +36,18 @@ app.post("/api/testDB", async (req, res) => {
 });
 
 // Start server
-app.listen(PORT, "127.0.0.1", () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
+async function startServer() {
+    try {
+        db = await connectDB();
+
+        app.listen(process.env.PORT || 3000, "127.0.0.1", () => {
+            console.log("Express server running");
+        });
+
+    } catch (error) {
+        console.error("Server startup failed:", error.message);
+        process.exit(1);
+    }
+}
+
+startServer();

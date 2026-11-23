@@ -11,9 +11,8 @@ const uri = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(pass
 
 const client = new MongoClient(uri, {
     tls: true,
-
     // Verify MongoDB server certificate
-    tlsCAFile: path.join(__dirname, "/src/db/certs", "mongodb-ca.pem"),
+    // tlsCAFile: path.join(__dirname, "../../certs", "mongodb-ca.pem"),
 
     serverSelectionTimeoutMS: 10000
 });

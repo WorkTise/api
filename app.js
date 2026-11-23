@@ -1,0 +1,40 @@
+
+const express = require("express");
+const { connectDB } = require("./src/db/database");
+let db;
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware
+app.use(express.json());
+
+// GET route
+app.get("/", (req, res) => {
+    res.json({
+        status: true,
+        message: "WorkTise Testiing API is running!"
+    });
+});
+
+// POST API
+app.post("/api/testDB", async (req, res) => {
+    try {
+        const result = await db.command({ ping: 1 });
+
+        res.json({
+            success: true,
+            mongodb: result
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
+// Start server
+app.listen(PORT, "127.0.0.1", () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});

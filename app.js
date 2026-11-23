@@ -5,9 +5,6 @@ const { connectDB } = require("./src/config/database");
 const { createUser } = require("./src/services/createUser");
 let db;
 const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,8 +28,10 @@ app.post("/test", async (req, res) => {
 });
 
 app.post("/createUser", async (req, res) => {
-    db = connectDB()
-    const result = await createUser(req, db);
+    // console.log("Content-Type:", req.headers["content-type"]);
+    // console.log("Request body:", req.body);
+    app.locals.db = connectDB()
+    const result = await createUser(req, app.locals.db);
     res.json(result);
 });
 

@@ -3,8 +3,9 @@ const bcrypt = require("bcrypt");
 const sendOTP = require("../auth/sendOTP");
 
 async function createUser(req, db) {
+   
     try {
-        const email = req.body.email?.trim().toLowerCase();
+        const email = req.body?.email?.trim().toLowerCase();
 
         if (!email) {
             return { status: false, message: "Email is required" };

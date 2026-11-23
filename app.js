@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const express = require("express");
-const { connectDB } = require("./src/db/database");
+const { connectDB } = require("./src/config/database");
 let db;
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +26,12 @@ app.post("/test", async (req, res) => {
             message: error.message
         });
     }
+});
+
+app.post("/createUser", async (req, res) => {
+    db = connectDB()
+    const result = await createUser(req, db);
+    res.json(result);
 });
 
 // Start server

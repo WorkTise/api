@@ -1,0 +1,96 @@
+const bcrypt = require("bcrypt");
+const MAX_ATTEMPTS = 5
+async function verifyOTP(req, db) {
+    try {
+        const email = req.body.email?.trim().toLowerCase();
+        const otp = String(req.body.otp || "");
+
+        if (!email || !/^\d{6}$/.test(otp)) {
+            return {
+                status: false,
+                message: "Invalid email or OTP"
+            };
+        }
+
+        const auth = db.collection("Auth");
+        const users = db.collection("users");
+
+        const record = await auth.findOne({
+            email,
+            purpose: "registration"
+        });
+
+        if (!record) {
+            return {
+                status: false,
+                message: "OTP not found or expired"
+            };
+        }
+
+        if (record.expiresAt <= new Date()) {
+            await auth.deleteOne({ _id: record._id });
+
+            return {
+                status: false,
+                message: "OTP expired"
+            };
+        }
+
+        if (record.attempts >= MAX_ATTEMPTS) {
+            return {
+                status: false,
+                message: "Too many attempts"
+            };
+        }
+
+        const valid = await bcrypt.compare(otp, record.otpHash);
+
+        if (!valid) {
+            await auth.updateOne(
+                { _id: record._id, attempts: record.attempts },
+                { $inc: { attempts: 1 } }
+            );
+
+            return {
+                status: false,
+                message: "Invalid OTP"
+            };
+        }
+
+        // Consume OTP only if it is still valid and unused.
+        const consumed = await auth.deleteOne({
+            _id: record._id,
+            otpHash: record.otpHash,
+            expiresAt: { $gt: new Date() },
+            attempts: { $lt: 5 }
+        });
+
+        if (consumed.deletedCount !== 1) {
+            return {
+                status: false,
+                message: "OTP already used or expired"
+            };
+        }
+
+        await users.insertOne({
+            email,
+            emailVerified: true,
+            createdAt: new Date()
+        });
+
+        return {
+            status: true,
+            message: "User registered successfully"
+        };
+
+    } catch (error) {
+        console.error(error);
+
+        return {
+            status: false,
+            message: "Something went wrong"
+        };
+    }
+}
+
+module.exports = verifyOTP;

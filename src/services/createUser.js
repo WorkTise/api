@@ -1,6 +1,6 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
-const sendOTP = require("./sendOTP");
+const sendOTP = require("../auth/sendOTP");
 
 async function createUser(req, db) {
     try {
@@ -67,4 +67,4 @@ async function createUser(req, db) {
     }
 }
 
-module.exports = createUser;
+module.exports = { createUser };

@@ -9,16 +9,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json());
 
-// GET route
-app.get("/", (req, res) => {
-    res.json({
-        status: true,
-        message: "WorkTise Testiing API is running!"
-    });
-});
 
 // POST API
-app.post("/api/testDB", async (req, res) => {
+app.post("/test", async (req, res) => {
     try {
         const result = await db.command({ ping: 1 });
 

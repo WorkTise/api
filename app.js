@@ -1,15 +1,19 @@
+
 require("dotenv").config();
 
 const express = require("express");
 const { connectDB } = require("./src/config/database");
 const { createUser } = require("./src/services/createUser");
-let db;
+
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// MongoDB database instance
+let db;
 
-// POST API
+// Test MongoDB connection
 app.post("/test", async (req, res) => {
     try {
         const result = await db.command({ ping: 1 });
@@ -27,12 +31,20 @@ app.post("/test", async (req, res) => {
     }
 });
 
+// Create user
 app.post("/createUser", async (req, res) => {
-    // console.log("Content-Type:", req.headers["content-type"]);
-    // console.log("Request body:", req.body);
-    app.locals.db = connectDB()
-    const result = await createUser(req, app.locals.db);
-    res.json(result);
+    try {
+        const result = await createUser(req, db);
+        res.json(result);
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            status: false,
+            message: "Internal server error"
+        });
+    }
 });
 
 // Start server

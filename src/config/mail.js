@@ -9,7 +9,12 @@ const transporter = nodemailer.createTransport({
 
     // Log SMTP transactions without logging email content
     transactionLog: true,
-    debug: false
+    debug: false,
+
+    tls: {
+        rejectUnauthorized: true,
+        servername: "mail.worktise.com"
+    }
 });
 
 module.exports = transporter;

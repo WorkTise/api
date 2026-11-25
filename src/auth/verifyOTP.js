@@ -93,4 +93,4 @@ async function verifyOTP(req, db) {
     }
 }
 
-module.exports = verifyOTP;
+module.exports = {verifyOTP};

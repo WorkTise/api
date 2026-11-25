@@ -4,6 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const { connectDB } = require("./src/config/database");
 const { createUser } = require("./src/services/createUser");
+const { verifyOTP } = require("./src/auth/verifyOTP");
 
 const app = express();
 

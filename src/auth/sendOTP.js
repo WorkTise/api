@@ -15,11 +15,11 @@ async function sendOTP(email, otp) {
             `
         });
 
-        return { status: true };
+        return { status: true, message: "Email Dent" };
 
     } catch (error) {
         console.error("Email error:", error);
-        return { status: false };
+        return { status: false, message: error };
     }
 }
 

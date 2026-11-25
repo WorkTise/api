@@ -33,7 +33,9 @@ app.post("/test", async (req, res) => {
 
 // Create user
 app.post("/createUser", async (req, res) => {
+    console.log(req.body)
     try {
+        console.log(req.body)
         const result = await createUser(req, db);
         res.json(result);
 
@@ -46,6 +48,7 @@ app.post("/createUser", async (req, res) => {
         });
     }
 });
+
 
 // Start server
 async function startServer() {

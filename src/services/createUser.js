@@ -3,8 +3,9 @@ const bcrypt = require("bcrypt");
 const sendOTP = require("../auth/sendOTP");
 
 async function createUser(req, db) {
-   
+
     try {
+        console.log(req.body)
         const email = req.body?.email?.trim().toLowerCase();
 
         if (!email) {
@@ -49,7 +50,7 @@ async function createUser(req, db) {
 
             return {
                 status: false,
-                message: "Unable to send OTP"
+                message: mailResult.message
             };
         }
 

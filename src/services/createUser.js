@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const sendOTP = require("../auth/sendOTP");
 const { verifyOTP } = require("../auth/verifyOTP");
+const vars = require("../config/vars")
 
 async function createUser(req, db) {
     console.log(req.body)
@@ -36,7 +37,7 @@ async function createUser(req, db) {
                     $set: {
                         otpHash,
                         createdAt: now,
-                        expiresAt: new Date(now.getTime() + 10 * 60 * 1000),
+                        expiresAt: new Date(now.getTime() + vars.OTP_EXPIRE_MIN),
                         attempts: 0,
                         purpose: "registration"
                     }

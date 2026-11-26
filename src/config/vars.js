@@ -1,0 +1,9 @@
+const MINUTE = 60 * 1000
+const HOUR = MINUTE * 60
+const DAY = HOUR * 24
+const MONTH = DAY * 30
+const YEAR = MONTH * 365
+
+const OTP_EXPIRE_MIN = 10 * MINUTE
+const OTP_MAX_ATTEMPTS = 5
+const VERIFIED_TILL_HRS = 2 * HOUR

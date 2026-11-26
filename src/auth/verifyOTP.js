@@ -1,16 +1,24 @@
 const bcrypt = require("bcrypt");
-const MAX_ATTEMPTS = 5
+const vars = require("../config/vars")
+
 async function verifyOTP(req, db) {
     try {
         const email = req.body.email?.trim().toLowerCase();
         const otp = String(req.body.otp || "");
         const now = new Date();
-        if (!email || !/^\d{6}$/.test(otp)) {
+        if (!email) {
             return {
                 status: false,
-                message: "Invalid email or OTP"
+                message: "Invalid email Entered"
             };
         }
+        if (!/^\d{6}$/.test(otp)) {
+            return {
+                status: false,
+                message: "Invalid OTP Entered"
+            };
+        }
+
 
         const auth = db.collection("Auth");
         const verifiedwithOTP = db.collection("verifiedwithOTP");
@@ -36,7 +44,7 @@ async function verifyOTP(req, db) {
             };
         }
 
-        if (record.attempts >= MAX_ATTEMPTS) {
+        if (record.attempts >= vars.OTP_MAX_ATTEMPTS) {
             return {
                 status: false,
                 message: "Too many attempts"
@@ -75,7 +83,7 @@ async function verifyOTP(req, db) {
         await verifiedwithOTP.insertOne({
             email,
             verifiedAt: new Date(),
-            expiresAt: new Date(now.getTime() + 2 * 60 * 60 * 1000);
+            expiresAt: new Date(now.getTime() + vars.VERIFIED_TILL_HRS)
         });
 
         return {

@@ -1,5 +1,7 @@
 const transporter = require("../config/mail");
 
+const EXPIRES_IN_STR = "10 minutes"
+
 async function sendOTP(email, otp) {
     try {
         await transporter.sendMail({
@@ -11,7 +13,7 @@ async function sendOTP(email, otp) {
                 <h2>Worktise verification</h2>
                 <p>Your verification code is:</p>
                 <h1>${otp}</h1>
-                <p>This code expires in 10 minutes.</p>
+                <p>This code expires in ${EXPIRES_IN_STR}.</p>
             `
         });
 

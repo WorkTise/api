@@ -4,7 +4,7 @@ async function verifyOTP(req, db) {
     try {
         const email = req.body.email?.trim().toLowerCase();
         const otp = String(req.body.otp || "");
-
+        const now = new Date();
         if (!email || !/^\d{6}$/.test(otp)) {
             return {
                 status: false,

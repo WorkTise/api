@@ -1,4 +1,4 @@
-export const TIME = Object.freeze({
+const TIME = Object.freeze({
     MINUTE: 60 * 1000,
     HOUR: 60 * 60 * 1000,
     DAY: 24 * 60 * 60 * 1000,
@@ -6,8 +6,10 @@ export const TIME = Object.freeze({
     YEAR: 365 * 24 * 60 * 60 * 1000
 });
 
-export const SECURITY = Object.freeze({
+const SECURITY = Object.freeze({
     OTP_EXPIRE_MIN: 10 * TIME.MINUTE,
     OTP_MAX_ATTEMPTS: 5,
     VERIFIED_TILL_HRS: 2 * TIME.HOUR
 });
+
+module.exports = { TIME, SECURITY };

@@ -5,7 +5,7 @@ const { verifyOTP } = require("../auth/verifyOTP");
 
 async function createUser(req, db) {
     console.log(req.body)
-    if (req.body.type === "send") {
+    if (req.body.sendOTP) {
         try {
             const email = req.body?.email?.trim().toLowerCase();
 

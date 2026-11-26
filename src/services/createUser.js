@@ -29,7 +29,7 @@ async function createUser(req, db) {
             const otpHash = await bcrypt.hash(otp, 12);
 
             const now = new Date();
-
+            console.log(SECURITY.OTP_EXPIRE_MIN)
             await auth.updateOne(
                 { email, purpose: "registration" },
                 {

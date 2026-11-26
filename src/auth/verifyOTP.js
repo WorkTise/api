@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const vars = require("../config/vars")
+const { SECURITY } = require("../config/vars")
 
 async function verifyOTP(req, db) {
     try {
@@ -9,7 +9,7 @@ async function verifyOTP(req, db) {
         if (!email) {
             return {
                 status: false,
-                message: "Invalid email Entered"
+                message: "Invalid Email Entered"
             };
         }
         if (!/^\d{6}$/.test(otp)) {
@@ -31,7 +31,7 @@ async function verifyOTP(req, db) {
         if (!record) {
             return {
                 status: false,
-                message: "OTP not found or expired"
+                message: "OTP Invalid or Expired"
             };
         }
 
@@ -44,7 +44,7 @@ async function verifyOTP(req, db) {
             };
         }
 
-        if (record.attempts >= vars.OTP_MAX_ATTEMPTS) {
+        if (record.attempts >= SECURITY.OTP_MAX_ATTEMPTS) {
             return {
                 status: false,
                 message: "Too many attempts"
@@ -83,7 +83,7 @@ async function verifyOTP(req, db) {
         await verifiedwithOTP.insertOne({
             email,
             verifiedAt: new Date(),
-            expiresAt: new Date(now.getTime() + vars.VERIFIED_TILL_HRS)
+            expiresAt: new Date(now.getTime() + SECURITY.VERIFIED_TILL_HRS)
         });
 
         return {

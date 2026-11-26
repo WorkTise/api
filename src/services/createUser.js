@@ -2,16 +2,15 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const sendOTP = require("../auth/sendOTP");
 const { verifyOTP } = require("../auth/verifyOTP");
-const vars = require("../config/vars")
+const { SECURITY } = require("../config/vars")
 
 async function createUser(req, db) {
-    console.log(req.body)
     if (req.body.sendOTP) {
         try {
             const email = req.body?.email?.trim().toLowerCase();
 
             if (!email) {
-                return { status: false, message: "Email is required" };
+                return { status: false, message: "Email Is required" };
             }
 
             const users = db.collection("users");
@@ -37,7 +36,7 @@ async function createUser(req, db) {
                     $set: {
                         otpHash,
                         createdAt: now,
-                        expiresAt: new Date(now.getTime() + vars.OTP_EXPIRE_MIN),
+                        expiresAt: new Date(now.getTime() + SECURITY.OTP_EXPIRE_MIN),
                         attempts: 0,
                         purpose: "registration"
                     }

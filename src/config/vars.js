@@ -1,9 +1,13 @@
-const MINUTE = 60 * 1000
-const HOUR = MINUTE * 60
-const DAY = HOUR * 24
-const MONTH = DAY * 30
-const YEAR = MONTH * 365
+export const TIME = Object.freeze({
+    MINUTE: 60 * 1000,
+    HOUR: 60 * 60 * 1000,
+    DAY: 24 * 60 * 60 * 1000,
+    MONTH: 30 * 24 * 60 * 60 * 1000,
+    YEAR: 365 * 24 * 60 * 60 * 1000
+});
 
-const OTP_EXPIRE_MIN = 10 * MINUTE
-const OTP_MAX_ATTEMPTS = 5
-const VERIFIED_TILL_HRS = 2 * HOUR
+export const SECURITY = Object.freeze({
+    OTP_EXPIRE_MIN: 10 * TIME.MINUTE,
+    OTP_MAX_ATTEMPTS: 5,
+    VERIFIED_TILL_HRS: 2 * TIME.HOUR
+});

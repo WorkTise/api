@@ -75,7 +75,7 @@ async function verifyOTP(req, db) {
         await verifiedwithOTP.insertOne({
             email,
             verifiedAt: new Date(),
-            expiresAt: new Date(now.getTime() + 12 * 3600 * 1000),
+            expiresAt: new Date(now.getTime() + 2 * 60 * 60 * 1000);
         });
 
         return {

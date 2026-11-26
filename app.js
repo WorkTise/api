@@ -34,9 +34,8 @@ app.post("/test", async (req, res) => {
 
 // Create user
 app.post("/createUser", async (req, res) => {
-    console.log(req.body)
+
     try {
-        console.log(req.body)
         const result = await createUser(req, db);
         res.json(result);
 
@@ -50,22 +49,6 @@ app.post("/createUser", async (req, res) => {
     }
 });
 
-app.post("/verifyOTP", async (req, res) => {
-    console.log(req.body)
-    try {
-        console.log(req.body)
-        const result = await verifyOTP(req, db);
-        res.json(result);
-
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            status: false,
-            message: "Internal server error"
-        });
-    }
-});
 
 
 // Start server

@@ -1,72 +1,80 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const sendOTP = require("../auth/sendOTP");
+const { verifyOTP } = require("../auth/verifyOTP");
 
 async function createUser(req, db) {
+    if (req.body.type == "send") {
+        try {
+            const email = req.body?.email?.trim().toLowerCase();
 
-    try {
-        console.log(req.body)
-        const email = req.body?.email?.trim().toLowerCase();
+            if (!email) {
+                return { status: false, message: "Email is required" };
+            }
 
-        if (!email) {
-            return { status: false, message: "Email is required" };
-        }
+            const users = db.collection("users");
+            const auth = db.collection("Auth");
 
-        const users = db.collection("users");
-        const auth = db.collection("Auth");
+            const existingUser = await users.findOne({ email });
 
-        const existingUser = await users.findOne({ email });
+            if (existingUser) {
+                return {
+                    status: false,
+                    message: "User already exists"
+                };
+            }
 
-        if (existingUser) {
+            const otp = crypto.randomInt(100000, 1000000).toString();
+            const otpHash = await bcrypt.hash(otp, 12);
+
+            const now = new Date();
+
+            await auth.updateOne(
+                { email, purpose: "registration" },
+                {
+                    $set: {
+                        otpHash,
+                        createdAt: now,
+                        expiresAt: new Date(now.getTime() + 10 * 60 * 1000),
+                        attempts: 0,
+                        purpose: "registration"
+                    }
+                },
+                { upsert: true }
+            );
+
+            const mailResult = await sendOTP(email, otp);
+
+            if (!mailResult.status) {
+                await auth.deleteOne({ email, purpose: "registration" });
+
+                return {
+                    status: false,
+                    message: mailResult.message
+                };
+            }
+
+            return {
+                status: true,
+                message: "OTP sent"
+            };
+
+        } catch (error) {
+            console.error(error);
+
             return {
                 status: false,
-                message: "User already exists"
+                message: "Something went wrong"
             };
         }
-
-        const otp = crypto.randomInt(100000, 1000000).toString();
-        const otpHash = await bcrypt.hash(otp, 12);
-
-        const now = new Date();
-
-        await auth.updateOne(
-            { email, purpose: "registration" },
-            {
-                $set: {
-                    otpHash,
-                    createdAt: now,
-                    expiresAt: new Date(now.getTime() + 10 * 60 * 1000),
-                    attempts: 0,
-                    purpose: "registration"
-                }
-            },
-            { upsert: true }
-        );
-
-        const mailResult = await sendOTP(email, otp);
-
-        if (!mailResult.status) {
-            await auth.deleteOne({ email, purpose: "registration" });
-
-            return {
-                status: false,
-                message: mailResult.message
-            };
-        }
-
+    } else {
+        const verification = await verifyOTP(req, db)
         return {
-            status: true,
-            message: "OTP sent"
-        };
-
-    } catch (error) {
-        console.error(error);
-
-        return {
-            status: false,
-            message: "Something went wrong"
+            status: verification.status,
+            message: verification.message
         };
     }
+
 }
 
 module.exports = { createUser };

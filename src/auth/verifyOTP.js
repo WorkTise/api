@@ -13,7 +13,7 @@ async function verifyOTP(req, db) {
         }
 
         const auth = db.collection("Auth");
-        const users = db.collection("users");
+        const verifiedwithOTP = db.collection("verifiedwithOTP");
 
         const record = await auth.findOne({
             email,
@@ -72,10 +72,10 @@ async function verifyOTP(req, db) {
             };
         }
 
-        await users.insertOne({
+        await verifiedwithOTP.insertOne({
             email,
-            emailVerified: true,
-            createdAt: new Date()
+            verifiedAt: new Date(),
+            expiresAt: new Date(now.getTime() + 12 * 3600 * 1000),
         });
 
         return {
@@ -93,4 +93,4 @@ async function verifyOTP(req, db) {
     }
 }
 
-module.exports = {verifyOTP};
+module.exports = { verifyOTP };
